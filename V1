@@ -1,0 +1,59 @@
+import tkinter as tk
+from tkinter import messagebox
+import subprocess
+
+interface = str("")
+new_mac = str("")
+
+class App:
+    def __init__(self, master):
+        self.master = master
+        master.title("MAC Randomizer")
+
+        self.int_label = tk.Label(master, text="Enter Interface to Change: ")
+        self.int_label.pack()
+
+        self.int_entry = tk.Entry(master)
+        self.int_entry.pack()
+
+        self.submit_button = tk.Button(master, text="Select Interface", command=self.select_interface)
+        self.submit_button.pack()
+
+        self.int_label_01 = tk.Label(master, text="Enter Desired MAC Address:")
+        self.int_label_01.pack()
+
+        self.int_entry_01 = tk.Entry(master)
+        self.int_entry_01.pack()
+
+        self.submit_button_01 = tk.Button(master, text="Change MAC Address", command=self.change_mac_address)
+        self.submit_button_01.pack()
+
+        # self.int_label_02 = tk.Label(master, text="Enter Desired IP Address:")
+        # self.int_label_02.pack()
+
+        # self.int_entry_02 = tk.Entry(master)
+        # self.int_entry_02.pack()
+
+        # self.submit_button_02 = tk.Button(master, text="Change IP Address", command=self.randomize_mac)
+        # self.submit_button_02.pack()
+
+        self.submit_button_03 = tk.Button(master, text="Quit", command=root.destroy)
+        self.submit_button_03.pack()
+
+    def select_interface(self):
+        global interface
+        interface = self.int_entry.get()
+
+    def change_mac_address(self):
+        global interface
+        global new_mac
+        new_mac = self.int_entry_01.get()
+        subprocess.call("sudo ifconfig " + interface + " down ", shell=True)
+        subprocess.call("sudo ifconfig " + interface + " hw ether " + new_mac, shell=True)
+        subprocess.call("sudo ifconfig " + interface + " up ", shell=True)
+        messagebox.showinfo(title="Success", message="MAC address for " + interface + "changed to" + new_mac)
+
+
+root = tk.Tk()
+app = App(root)
+root.mainloop()
